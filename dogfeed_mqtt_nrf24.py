@@ -4,6 +4,11 @@ import time
 import spidev
 import paho.mqtt.client as paho
 import arrow
+import logging
+from logging.config import fileConfig
+
+fileConfig('logging_config.ini')
+logger = logging.getLogger()
 
 def on_connect(client, userdata, flags, rc):
     print("CONNACK received with code {}.".format(rc))
@@ -65,12 +70,12 @@ def main():
         radio.read(receivedMessage, radio.getDynamicPayloadSize())
         #print("Received: {}".format(receivedMessage))
         translated_string = translate_message(receivedMessage)
-        if (now - last_event).seconds / 3600 > 1:
-            print('Sending MQTT message')
+        if (now - last_event).seconds / 3600 > 1 and translated_string != "TEST":
+            logger.debug('Sending MQTT message')
             (rc, mid) = client.publish("dog-monitor/food", now.ctime(), qos=1)
             last_event = now
         #(rc, mid) = client.publish("dog-monitor/food", translated_string, qos=1)
-        print("{} - Received message: {}".format(now, translated_string))
+        logger.debug("{} - Received message: {}".format(now, translated_string))
 
 
 if __name__ == "__main__":
