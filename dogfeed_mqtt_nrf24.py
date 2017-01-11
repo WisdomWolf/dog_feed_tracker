@@ -6,6 +6,7 @@ import paho.mqtt.client as paho
 import arrow
 import logging
 from logging.config import fileConfig
+from logging.handlers import RotatingFileHandler
 
 fileConfig('logging_config.ini')
 logger = logging.getLogger()
