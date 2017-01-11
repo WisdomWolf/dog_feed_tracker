@@ -10,6 +10,8 @@ from logging.config import fileConfig
 fileConfig('logging_config.ini')
 logger = logging.getLogger()
 
+logger.info('Dogfeed MQTT NRF24 started')
+
 def on_connect(client, userdata, flags, rc):
     print("CONNACK received with code {}.".format(rc))
 
