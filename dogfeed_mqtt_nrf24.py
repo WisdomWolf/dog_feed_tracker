@@ -28,9 +28,9 @@ radio.setChannel(0x76)
 radio.setDataRate(NRF24.BR_1MBPS)
 radio.setPALevel(NRF24.PA_MIN)
 
-radio.setAutoAck(True)
+#radio.setAutoAck(True)
 radio.enableDynamicPayloads()
-radio.enableAckPayload()
+#radio.enableAckPayload()
 
 radio.openReadingPipe(1, pipes[1])
 radio.printDetails()
@@ -51,16 +51,20 @@ def translate_message(receivedMessage):
 
 def main():
     last_event = arrow.now('US/Eastern').replace(hours=-2)
-    while(1):
+    i = 0
+    while True:
         # ackPL = [1]
         #radio.powerUp()
-        while not radio.available(0):
-            time.sleep(1 / 100)
+        now = arrow.now()
+        if not radio.available(0):
+            time.sleep(.01)
+            #i += 1
+            #print("{} - Radio not available".format(i), end="\r")
+            continue
         receivedMessage = []
         radio.read(receivedMessage, radio.getDynamicPayloadSize())
         #print("Received: {}".format(receivedMessage))
         translated_string = translate_message(receivedMessage)
-        now = arrow.now()
         if (now - last_event).seconds / 3600 > 1:
             print('Sending MQTT message')
             (rc, mid) = client.publish("dog-monitor/food", now.ctime(), qos=1)
