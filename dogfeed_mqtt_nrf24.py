@@ -66,8 +66,8 @@ def main():
         now = arrow.now()
         if not radio.available(0):
             time.sleep(.01)
-            i += 1
-            print("{} - Radio not available".format(i), end="\r")
+            #i += 1
+            #print("{} - Radio not available".format(i), end="\r")
             continue
         receivedMessage = []
         radio.read(receivedMessage, radio.getDynamicPayloadSize())
@@ -78,7 +78,7 @@ def main():
             (rc, mid) = client.publish("dog-monitor/food", now.ctime(), qos=1)
             last_event = now
         #(rc, mid) = client.publish("dog-monitor/food", translated_string, qos=1)
-        logger.debug("{} - Received message: {}\n".format(now, translated_string))
+        logger.debug("{} - Received message: {}".format(now, translated_string))
 
 
 if __name__ == "__main__":
