@@ -25,10 +25,14 @@ void setup(){
   radio.enableDynamicPayloads();
   radio.powerUp();
   digitalWrite(ledPin, HIGH);
-  attachInterrupt(1, wakeUpNow, CHANGE);
+  createInterrupt();
   //pinMode(ledPin, OUTPUT);
-  digitalWrite(switchPin, HIGH);
+  pinMode(switchPin, INPUT_PULLUP);
   spi_save = SPCR;
+}
+
+void createInterrupt(){
+  attachInterrupt(digitalPinToInterrupt(switchPin), wakeUpNow, FALLING);
 }
 
 void sleepNow()         // here we put the arduino to sleep
@@ -79,7 +83,8 @@ void sleepNow()         // here we put the arduino to sleep
      * In all but the IDLE sleep modes only LOW can be used.
      */
 
-    attachInterrupt(1,wakeUpNow, CHANGE); // use interrupt 0 (pin 2) and run function
+    createInterrupt();
+    Serial.println("Reattached interrupt");
     radio.powerDown();
     SPCR = 0;
     // power down                                       // wakeUpNow when pin 2 gets LOW 
